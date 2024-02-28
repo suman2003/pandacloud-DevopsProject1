@@ -74,11 +74,12 @@ resource "aws_security_group" "my_security_group2" {
 # STEP2: CREATE A K8S EC2 INSTANCE USING EXISTING PEM KEY
 # Note: i. First create a pem-key manually from the AWS console
 #      ii. Copy it in the same directory as your terraform code
+# AMI: amzn2-ami-kernel-5.10-hvm-2.0.20240131.0-x86_64-gp2 (singapore : ami-08db74f389216e7e0)
 resource "aws_instance" "my_ec2_instance2" {
-  ami                    = "ami-0cf10cdf9fcd62d37"
+  ami                    = "ami-08db74f389216e7e0"
   instance_type          = "t2.medium" # K8s requires min 2CPU & 4G RAM
   vpc_security_group_ids = [aws_security_group.my_security_group2.id]
-  key_name               = "My_Key" # paste your key-name here, do not use extension '.pem'
+  key_name               = "devops" # paste your key-name here, do not use extension '.pem'
 
   # Consider EBS volume 30GB
   root_block_device {
@@ -95,7 +96,7 @@ resource "aws_instance" "my_ec2_instance2" {
     # ESTABLISHING SSH CONNECTION WITH EC2
     connection {
       type        = "ssh"
-      private_key = file("./My_Key.pem") # replace with your key-name 
+      private_key = file("./devops.pem") # replace with your key-name 
       user        = "ec2-user"
       host        = self.public_ip
     }
